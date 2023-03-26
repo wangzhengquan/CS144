@@ -18,7 +18,6 @@ void get_URL(const string &host, const string &path) {
     }
 }
 
-
 int main(int argc, char *argv[]) {
     try {
         if (argc <= 0) {
