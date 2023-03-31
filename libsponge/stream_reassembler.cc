@@ -12,10 +12,10 @@ using namespace std;
 StreamReassembler::StreamReassembler(const size_t capacity)
     : _output(capacity), _capacity(capacity), _buffer(capacity), _bitmap(capacity, false) {}
 
-void StreamReassembler::push_substring(const string &data, const size_t index, const bool eof) {
-    size_t data_len = data.length();
-    size_t _first_unassembled = _output.bytes_written();
-    size_t end_index, start_index, data_start, output_start, copy_len, output_len;
+void StreamReassembler::push_substring(const string &data, const uint64_t index, const bool eof) {
+    uint64_t data_len = data.length();
+    uint64_t _first_unassembled = _output.bytes_written();
+    uint64_t end_index, start_index, data_start, output_start, copy_len, output_len;
     if(eof)
         _eof = true;
     
@@ -43,7 +43,7 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     }
     // size_t copy_end = data_start + copy_len ;
     // size_t output_end = output_start + copy_len ;
-    for (size_t i = 0; i < copy_len; i++) {
+    for (uint64_t i = 0; i < copy_len; i++) {
         if(!_bitmap[output_start + i] ){
              _buffer[output_start + i] = data[data_start + i];
             _bitmap[output_start + i] = true;

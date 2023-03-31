@@ -15,6 +15,8 @@ int main() {
         test_should_be(unwrap(WrappingInt32(1), WrappingInt32(0), 0), 1ul);
         // Unwrap the first byte after the first wrap
         test_should_be(unwrap(WrappingInt32(1), WrappingInt32(0), UINT32_MAX), (1ul << 32) + 1);
+        // Unwrap the first byte after the third wrap
+        test_should_be(unwrap(WrappingInt32(1), WrappingInt32(0), (1ul << 32)*2+UINT32_MAX), (1ul << 32)*3 + 1);
         // Unwrap the last byte before the third wrap
         test_should_be(unwrap(WrappingInt32(UINT32_MAX - 1), WrappingInt32(0), 3 * (1ul << 32)), 3 * (1ul << 32) - 2);
         // Unwrap the 10th from last byte before the third wrap
