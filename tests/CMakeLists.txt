@@ -6,6 +6,7 @@ macro (add_test_exec exec_name)
     target_link_libraries ("${exec_name}" sponge ${ARGN})
 endmacro (add_test_exec)
 
+add_test_exec (mytest)
 add_test_exec (tcp_parser ${LIBPCAP})
 add_test_exec (fsm_stream_reassembler_single)
 add_test_exec (fsm_stream_reassembler_seq)

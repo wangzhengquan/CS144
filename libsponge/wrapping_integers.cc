@@ -52,27 +52,29 @@ uint64_t unwrap1(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
 }
 
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
-    uint64_t absseq = static_cast<uint32_t>(n - isn) ; 
-    uint64_t nxt_absseq;
+    uint64_t above_absseq = static_cast<uint32_t>(n - isn) ; 
+    uint64_t below_absseq;
     //std::cout << "n=" <<  n << " isn="<<isn << " absseq=" << absseq << std::endl;
-    if(absseq > checkpoint)
-      return absseq;
+    if(above_absseq > checkpoint)
+      return above_absseq;
     
-    absseq |= (checkpoint >> 32) << 32;
+    above_absseq |= (checkpoint >> 32) << 32;
 
-    if(absseq > checkpoint){
-      nxt_absseq = absseq;
-      absseq -=  MOD;
+    if(above_absseq < checkpoint){
+      below_absseq = above_absseq;
+      above_absseq = above_absseq + MOD;
     } else {
-       nxt_absseq = absseq + MOD;
+      below_absseq = above_absseq - MOD;
     }
     
-    if(checkpoint - absseq  > nxt_absseq - checkpoint){
-      absseq = nxt_absseq;
-    }
-     
-    return absseq;
+    if(checkpoint - below_absseq  > above_absseq - checkpoint){
+      return above_absseq;
+    }  
+    return below_absseq;
 }
+
+ 
+
 
  
  
