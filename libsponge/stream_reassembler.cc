@@ -16,9 +16,9 @@ void StreamReassembler::push_substring(const string &data, const uint64_t index,
     uint64_t data_len = data.length();
     uint64_t _first_unassembled = _output.bytes_written();
     uint64_t end_index, start_index, data_start, output_start, copy_len, output_len;
-    if(eof)
+    if (eof)
         _eof = true;
-    
+
     if (data_len == 0) {
         goto label_end;
     }
@@ -35,7 +35,7 @@ void StreamReassembler::push_substring(const string &data, const uint64_t index,
     output_start = start_index - _first_unassembled;
 
     copy_len = min(data_len - data_start, _output.remaining_capacity() - output_start);
-    if( eof && (copy_len < data_len - data_start )){
+    if (eof && (copy_len < data_len - data_start)) {
         _eof = false;
     }
     if (copy_len == 0) {
@@ -44,10 +44,10 @@ void StreamReassembler::push_substring(const string &data, const uint64_t index,
     // size_t copy_end = data_start + copy_len ;
     // size_t output_end = output_start + copy_len ;
     for (uint64_t i = 0; i < copy_len; i++) {
-        if(!_bitmap[output_start + i] ){
-             _buffer[output_start + i] = data[data_start + i];
+        if (!_bitmap[output_start + i]) {
+            _buffer[output_start + i] = data[data_start + i];
             _bitmap[output_start + i] = true;
-            _unassembled_bytes ++;
+            _unassembled_bytes++;
         }
     }
 
@@ -65,7 +65,7 @@ void StreamReassembler::push_substring(const string &data, const uint64_t index,
     }
 
 label_end:
-    
+
     if (_eof && _unassembled_bytes == 0) {
         _output.end_input();
     }

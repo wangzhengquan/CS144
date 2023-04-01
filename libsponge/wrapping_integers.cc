@@ -14,11 +14,7 @@ using namespace std;
 //! Transform an "absolute" 64-bit sequence number (zero-indexed) into a WrappingInt32
 //! \param n The input absolute 64-bit sequence number
 //! \param isn The initial sequence number
-WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
-  return isn + uint32_t(n);
-}
-
-
+WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) { return isn + static_cast<uint32_t>(n); }
 
 //! Transform a WrappingInt32 into an "absolute" 64-bit sequence number (zero-indexed)
 //! \param n The relative sequence number
@@ -30,55 +26,33 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! runs from the local TCPSender to the remote TCPReceiver and has one ISN,
 //! and the other stream runs from the remote TCPSender to the local TCPReceiver and
 //! has a different ISN.
-uint64_t unwrap1(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
-    uint64_t absseq = static_cast<uint32_t>(n - isn) ; 
-    //std::cout << "n=" <<  n << " isn="<<isn << " absseq=" << absseq << std::endl;
-    if(absseq > checkpoint)
-      return absseq;
-
-    uint64_t check_mod = (checkpoint >> 32) << 32;
-    if(check_mod > MOD)
-      check_mod -= MOD;
-
-    absseq |= check_mod;
-
-    uint64_t nxt_absseq = absseq + MOD;
-    while(labs(absseq - checkpoint) > labs(nxt_absseq - checkpoint)){
-      absseq = nxt_absseq;
-      nxt_absseq = absseq + MOD;
-    }
-     
-    return absseq;
-}
-
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
-    uint64_t above_absseq = static_cast<uint32_t>(n - isn) ; 
+    uint64_t above_absseq = static_cast<uint32_t>(n - isn);
     uint64_t below_absseq;
-    //std::cout << "n=" <<  n << " isn="<<isn << " absseq=" << absseq << std::endl;
-    if(above_absseq > checkpoint)
-      return above_absseq;
-    
+    // std::cout << "n=" <<  n << " isn="<<isn << " absseq=" << absseq << std::endl;
+    if (above_absseq > checkpoint)
+        return above_absseq;
+
     above_absseq |= (checkpoint >> 32) << 32;
 
-    if(above_absseq < checkpoint){
-      below_absseq = above_absseq;
-      above_absseq = above_absseq + MOD;
+    if (above_absseq < checkpoint) {
+        below_absseq = above_absseq;
+        above_absseq = above_absseq + MOD;
     } else {
-      below_absseq = above_absseq - MOD;
+        below_absseq = above_absseq - MOD;
     }
-    
-    if(checkpoint - below_absseq  > above_absseq - checkpoint){
-      return above_absseq;
-    }  
+
+    if (checkpoint - below_absseq > above_absseq - checkpoint) {
+        return above_absseq;
+    }
     return below_absseq;
 }
-
- 
-
-
- 
- 
-
-
-
-
+// 网络上发现的这个方法更好
+uint64_t unwrap2(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
+    // 找到n和checkpoint之间的最小步数
+    int32_t min_step = n - wrap(checkpoint, isn);
+    // 将步数加到checkpoint上
+    int64_t ret = checkpoint + min_step;
+    // 如果反着走的话要加2^32
+    return ret >= 0 ? static_cast<uint64_t>(ret) : ret + (1ul << 32);
+}
