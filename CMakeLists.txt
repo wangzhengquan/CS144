@@ -3,6 +3,7 @@ cmake_policy (SET CMP0054 NEW)
 project (Sponge)
 
 add_compile_options(-Wno-unused-variable -Wno-unused-parameter)
+add_compile_options(--param=max-vartrack-size=60000000)
 
 
 

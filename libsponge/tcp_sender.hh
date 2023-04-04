@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <queue>
+#include <algorithm>
 
 //! \brief The "sender" part of a TCP implementation.
 
@@ -22,15 +23,24 @@ class TCPSender {
 
     //! outbound queue of segments that the TCPSender wants sent
     std::queue<TCPSegment> _segments_out{};
+    // unacknowleged segment
+    std::queue<TCPSegment> _segments_outstanding{};
 
     //! retransmission timer for the connection
     unsigned int _initial_retransmission_timeout;
+    unsigned int _ms_rto; // retransmission timeout
+    unsigned int _ms_elapsed{0};
+    unsigned int _consecutive_retransmissions{0};
+    bool _timer_running = false;
+    bool _closed = false;
 
     //! outgoing stream of bytes that have not yet been sent
     ByteStream _stream;
 
+    uint32_t _rwnd=1;
     //! the (absolute) sequence number for the next byte to be sent
-    uint64_t _next_seqno{0};
+    uint64_t _next_seqno{0}; // _last_seqno_send
+    uint64_t _base{0};  // last_seqno_acked
 
   public:
     //! Initialize a TCPSender
@@ -66,7 +76,7 @@ class TCPSender {
     //! \brief How many sequence numbers are occupied by segments sent but not yet acknowledged?
     //! \note count is in "sequence space," i.e. SYN and FIN each count for one byte
     //! (see TCPSegment::length_in_sequence_space())
-    size_t bytes_in_flight() const;
+    uint64_t bytes_in_flight() const;
 
     //! \brief Number of consecutive retransmissions that have occurred in a row
     unsigned int consecutive_retransmissions() const;

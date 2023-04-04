@@ -215,13 +215,13 @@ add_test(NAME t_isnD_128K_8K_lL      COMMAND "${PROJECT_SOURCE_DIR}/txrx.sh" -is
 
 add_custom_target (check_webget COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_webget'
                               COMMENT "Testing webget...")
-add_custom_target (check_lab0 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_webget|t_byte_stream|_dt'
+add_custom_target (check_lab0 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_byte_stream|_dt'
                               COMMENT "Testing Lab 0...")
 add_custom_target (check_lab1 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_strm_reassem_'
                               COMMENT "Testing the stream reassembler...")
-add_custom_target (check_lab2 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_recv_|t_wrapping_|t_strm_reassem_|t_byte_stream|_dt'
+add_custom_target (check_lab2 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_recv_|t_wrapping_'
                               COMMENT "Testing the TCP receiver...")
-add_custom_target (check_lab3 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_send_|t_recv_|t_wrapping_|t_strm_reassem_|t_byte_stream|_dt'
+add_custom_target (check_lab3 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R 't_send_'
                               COMMENT "Testing the TCP sender...")
 add_custom_target (check_lab4 COMMAND "${PROJECT_SOURCE_DIR}/tun.sh" check 144 145
                               COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --timeout 10 -R "^t_"

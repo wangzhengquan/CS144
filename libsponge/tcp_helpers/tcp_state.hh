@@ -38,11 +38,11 @@ const std::string FIN_RECV = "input to stream has ended";
 
 namespace TCPSenderStateSummary {
 const std::string ERROR = "error (connection was reset)";
-const std::string CLOSED = "waiting for stream to begin (no SYN sent)";
-const std::string SYN_SENT = "stream started but nothing acknowledged";
-const std::string SYN_ACKED = "stream ongoing";
-const std::string FIN_SENT = "stream finished (FIN sent) but not fully acknowledged";
-const std::string FIN_ACKED = "stream finished and fully acknowledged";
+const std::string CLOSED = "waiting for stream to begin (no SYN sent, CLOSED)";
+const std::string SYN_SENT = "stream started but nothing acknowledged(SYN_SENT)";
+const std::string SYN_ACKED = "stream ongoing (SYN_ACKED)";
+const std::string FIN_SENT = "stream finished but not fully acknowledged (FIN sent)";
+const std::string FIN_ACKED = "stream finished and fully acknowledged(FIN_ACKED)";
 }  // namespace TCPSenderStateSummary
 
 #endif  // SPONGE_LIBSPONGE_TCP_STATE
