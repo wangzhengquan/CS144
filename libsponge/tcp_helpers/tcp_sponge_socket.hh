@@ -21,6 +21,7 @@ template <typename AdaptT>
 class TCPSpongeSocket : public LocalStreamSocket {
   private:
     //! Stream socket for reads and writes between owner and TCP thread
+    // this.write写的数据可以通过_thread_data.read读取，_thread_data.write写入的数据可以从this.read读取
     LocalStreamSocket _thread_data;
 
     //! Adapter to underlying datagram socket (e.g., UDP or IP)

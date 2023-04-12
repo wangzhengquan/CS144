@@ -20,7 +20,15 @@ class TCPConnection {
     //! for 10 * _cfg.rt_timeout milliseconds after both streams have ended,
     //! in case the remote TCPConnection doesn't know we've received its whole stream?
     bool _linger_after_streams_finish{true};
+    bool _active{true};
+    size_t _time_since_last_segment_received = 0;
 
+    void send_segs();
+    void set_ack_and_windowsize(TCPSegment &segment) ;
+    void abort();
+    bool is_inbound_ended();
+    bool is_outbound_ended();
+    bool is_outbound_ended_and_acked();
   public:
     //! \name "Input" interface for the writer
     //!@{
