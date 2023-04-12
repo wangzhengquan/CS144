@@ -25,7 +25,7 @@ class TCPConnection {
 
     void send_segs();
     void set_ack_and_windowsize(TCPSegment &segment) ;
-    void abort();
+    void reset_connection();
     bool is_inbound_ended();
     bool is_outbound_ended();
     bool is_outbound_ended_and_acked();
