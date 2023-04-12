@@ -14,24 +14,6 @@ using namespace std;
 using State = TCPTestHarness::State;
 
 int main() {
-    TCPConfig cfg{};
-    {
-        TCPTestHarness test_1 = TCPTestHarness::in_time_wait(cfg);
-
-        // test_1.execute(Tick(10 * cfg.rt_timeout - 1));
-
-        // test_1.execute(ExpectState{State::TIME_WAIT});
-
-        // test_1.execute(Tick(1));
-
-        // test_1.execute(ExpectNotInState{State::TIME_WAIT});
-
-        // test_1.execute(Tick(10 * cfg.rt_timeout));
-
-        // test_1.execute(ExpectState{State::CLOSED});
-    }
-}
-int test() {
     try {
         TCPConfig cfg{};
 
