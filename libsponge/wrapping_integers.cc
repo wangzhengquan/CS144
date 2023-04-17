@@ -26,7 +26,7 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) { return isn + static_cast<uin
 //! runs from the local TCPSender to the remote TCPReceiver and has one ISN,
 //! and the other stream runs from the remote TCPSender to the local TCPReceiver and
 //! has a different ISN.
-uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
+uint64_t unwrap1(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     uint64_t above_absseq = static_cast<uint32_t>(n - isn);
     uint64_t below_absseq;
     // std::cout << "n=" <<  n << " isn="<<isn << " absseq=" << absseq << std::endl;
@@ -48,7 +48,7 @@ uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     return below_absseq;
 }
 // 网络上发现的这个方法更好
-uint64_t unwrap2(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
+uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     // 找到n和checkpoint之间的最小步数
     int32_t min_step = n - wrap(checkpoint, isn);
     // 将步数加到checkpoint上

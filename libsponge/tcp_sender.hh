@@ -41,7 +41,7 @@ class TCPSender {
     //! the (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0}; // _last_seqno_send
     uint64_t _base{0};  // last_seqno_acked
-
+    inline void start_timer();
   public:
     //! Initialize a TCPSender
     TCPSender(const size_t capacity = TCPConfig::DEFAULT_CAPACITY,
@@ -76,7 +76,7 @@ class TCPSender {
     //! \brief How many sequence numbers are occupied by segments sent but not yet acknowledged?
     //! \note count is in "sequence space," i.e. SYN and FIN each count for one byte
     //! (see TCPSegment::length_in_sequence_space())
-    uint64_t bytes_in_flight() const;
+    inline uint64_t bytes_in_flight() const { return _next_seqno - _base;}
 
     //! \brief Number of consecutive retransmissions that have occurred in a row
     unsigned int consecutive_retransmissions() const;

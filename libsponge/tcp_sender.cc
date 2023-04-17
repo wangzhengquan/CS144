@@ -14,6 +14,11 @@ void DUMMY_CODE(Targs &&... /* unused */) {}
 
 using namespace std;
 
+inline void TCPSender::start_timer() {
+  // start
+  _timer_running = true;
+  _ms_elapsed = 0;
+}
 //! \param[in] capacity the capacity of the outgoing byte stream
 //! \param[in] retx_timeout the initial amount of time to wait before retransmitting the oldest outstanding segment
 //! \param[in] fixed_isn the Initial Sequence Number to use, if set (otherwise uses a random ISN)
@@ -23,7 +28,7 @@ TCPSender::TCPSender(const size_t capacity, const uint16_t retx_timeout, const s
     , _ms_rto(retx_timeout)
     , _stream(capacity) {}
 
-uint64_t TCPSender::bytes_in_flight() const { return _next_seqno - _base; }
+// inline uint64_t TCPSender::bytes_in_flight() const { return _next_seqno - _base; }
 
 void TCPSender::fill_window() {
   TCPSegment seg{};
@@ -40,9 +45,7 @@ void TCPSender::fill_window() {
     _segments_outstanding.push(seg);
     _next_seqno += seg.length_in_sequence_space();
     if(!_timer_running){
-      // start
-      _timer_running = true;
-      _ms_elapsed = 0;
+      start_timer();
     }
     return;
   }
@@ -57,15 +60,13 @@ void TCPSender::fill_window() {
     _next_seqno += seg.length_in_sequence_space();
     _closed = true;
     if(!_timer_running){
-      // start
-      _timer_running = true;
-      _ms_elapsed = 0;
+      start_timer();
     }
     return;
   }
 
   while(!_stream.buffer_empty() 
-    && (outstanding_bytes = _next_seqno - _base) < rwnd)
+    && (outstanding_bytes = bytes_in_flight()) < rwnd)
   {    
     seg.header().syn = false;
     seg.header().fin = false;
@@ -80,9 +81,7 @@ void TCPSender::fill_window() {
     _segments_outstanding.push(seg);
     _next_seqno += seg.length_in_sequence_space();
     if(!_timer_running){
-      // start
-      _timer_running = true;
-      _ms_elapsed = 0;
+      start_timer();
     }
   }
 
@@ -120,7 +119,7 @@ void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_si
     _timer_running = false;
   } else {
     // restart
-     _ms_elapsed = 0; 
+    start_timer();
   }
  
   _consecutive_retransmissions = 0;
@@ -138,14 +137,14 @@ void TCPSender::tick(const size_t ms_since_last_tick) {
   _ms_elapsed += ms_since_last_tick;
   if(_ms_elapsed < _ms_rto) return;
 
+  // timeout
   _segments_out.push(_segments_outstanding.front());
-   // restart
-  _ms_elapsed = 0;
-
-  if(_rwnd !=0){
+  if(_rwnd != 0){
     _consecutive_retransmissions++;
     _ms_rto *= 2;
   }
+   // restart
+  start_timer();
 }
 
 unsigned int TCPSender::consecutive_retransmissions() const { return _consecutive_retransmissions; }
