@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <queue>
+#include <map>
 #include "tcp_sponge_socket.hh"
  
 
@@ -34,17 +35,20 @@ int main(int argc, char *argv[]) {
     // uint64_t c = b-a;
     // std::cout << c << std::endl;
     // std::cout << UINT64_MAX << std::endl;
-    std::queue<TCPSegment> queue{};
-    TCPSegment seg{};
-    seg.header().seqno = WrappingInt32(15) ;
-    queue.push(seg);
+    // std::queue<TCPSegment> queue{};
+    // TCPSegment seg{};
+    // seg.header().seqno = WrappingInt32(15) ;
+    // queue.push(seg);
     
-    std::cout << queue.front().header().summary() << std::endl;
-    queue.pop();
-    std::cout << queue.front().header().summary() << std::endl;
-    TCPSegment & ref = seg;
-    std::cout << ref.header().summary() << std::endl;
+    // std::cout << queue.front().header().summary() << std::endl;
+    // queue.pop();
+    // std::cout << queue.front().header().summary() << std::endl;
+    // TCPSegment & ref = seg;
+    // std::cout << ref.header().summary() << std::endl;
      
 
+    std::map<int, std::string> mymap{{1, "hello"}};
+    std::cout << mymap[1] << std::endl;
+    std::cout << (mymap[0]=="") ;
     return 0;
 }
