@@ -41,11 +41,6 @@ class NetworkInterface {
       bool valide;
     };
 
-    struct PendingDatagram{
-      InternetDatagram _dgram;
-      Address _next_hop;
-    };
-    
     //! Ethernet (known as hardware, network-access-layer, or link-layer) address of the interface
     EthernetAddress _ethernet_address;
 
