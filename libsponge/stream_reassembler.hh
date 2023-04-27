@@ -16,7 +16,7 @@ class StreamReassembler {
     // Your code here -- add private members as necessary.
 
     ByteStream _output;  //!< The reassembled in-order byte stream
-    size_t _capacity;    //!< The maximum number of bytes
+    // size_t _capacity;    //!< The maximum number of bytes
 
     // std::map<size_t, std::string> _unassembled_buffer{};  //!< The vector of substrings
     std::deque<char> _buffer;

@@ -6,4 +6,4 @@ sudo tshark -Pw /tmp/debug.raw -i tun144
 
 
 
-cmake .. -DCMAKE_BUILD_TYPE=Debug
+CXX=clang++ cmake .. -DCMAKE_BUILD_TYPE=Debug

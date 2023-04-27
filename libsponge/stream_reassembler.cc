@@ -10,7 +10,7 @@
 using namespace std;
 
 StreamReassembler::StreamReassembler(const size_t capacity)
-    : _output(capacity), _capacity(capacity), _buffer(capacity), _bitmap(capacity, false) {}
+    : _output(capacity),  _buffer(capacity), _bitmap(capacity, false) {}
 
 void StreamReassembler::push_substring(const string &data, const uint64_t index, const bool eof) {
     uint64_t data_len = data.length();
